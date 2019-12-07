@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     // Variables
-    @State private var countries = ["Estonia", "Francia", "Alemania", "Irlanda", "Italia", "Nigeria", "Polonia", "Russia", "España", "Reino Unido", "EEUU"].shuffled()
+    @State private var countries = ["Estonia", "Francia", "Alemania", "Irlanda", "Italia", "Nigeria", "Polonia", "Russia", "España", "Reino Unido", "EEUU", "Monaco"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
     @State private var showingScore = false
     @State private var scoreTitle = ""
@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
                 
                 // A stack of 3 flags to choose from to anwer
-                ForEach(0 ..< 2) { number in
+                ForEach(0 ..< 3) { number in
                     Button(action: {
                         self.flagTapped(number)
                     }) {
