@@ -13,7 +13,8 @@ struct ContentView: View {
     @State private var countries = ["Estonia", "Francia", "Alemania", "Irlanda", "Italia", "Nigeria", "Polonia", "Russia", "España", "Reino Unido", "EEUU", "Monaco"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
     @State private var showingScore = false
-    @State private var scoreTitle = ""
+    @State private var answerAlertTitle = ""
+    @State private var answerAlertMesage = ""
     @State private var score = 0
     
     var body: some View {
@@ -55,7 +56,7 @@ struct ContentView: View {
         }
         // Displays an alert
         .alert(isPresented: $showingScore) {
-            Alert(title: Text(scoreTitle), message: Text("Tu puntuación es de \(score)"), dismissButton: .default(Text("Continuar")) {
+            Alert(title: Text(answerAlertTitle), message: Text(answerAlertMesage), dismissButton: .default(Text("Continuar")) {
                 self.askQuestion()
                 })
         }
@@ -64,10 +65,12 @@ struct ContentView: View {
     // Checks if your answer is right or wrong
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
-            scoreTitle = "¡Correcto!"
+            answerAlertTitle = "¡Correcto!"
+            answerAlertMesage = "¡Efectivamente! Esa es la bandera de \(self.countries[number])"
             score += 1
         } else {
-            scoreTitle = "¡Incorrecto!"
+            answerAlertTitle = "¡Incorrecto!"
+            answerAlertMesage = "¡No! Esa es la bandera de \(self.countries[number])"
             score -= 1
         }
         
