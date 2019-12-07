@@ -9,24 +9,62 @@
 import SwiftUI
 
 struct ContentView: View {
+    // Variables
+    @State private var countries = ["Estonia", "Francia", "Alemania", "Irlanda", "Italia", "Nigeria", "Polonia", "Russia", "España", "Reino Unido", "EEUU"].shuffled()
+    @State private var correctAnswer = Int.random(in: 0...2)
+    @State private var showingScore = false
+    @State private var scoreTitle = ""
+    
     var body: some View {
-        VStack {
-            HStack {
-                Text("1")
-                Text("2")
-                Text("3")
-            }
-            HStack {
-                Text("4")
-                Text("5")
-                Text("6")
-            }
-            HStack {
-                Text("7")
-                Text("8")
-                Text("9")
+        // ZStack to put a background color
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.blue, .black]), startPoint: .top, endPoint: .bottom)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack(spacing: 30) {
+                VStack {
+                    Text("¿Qual es la bandera de")
+                        .foregroundColor(.white)
+                    Text("\(countries[correctAnswer])?")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .fontWeight(.black)
+                }
+                
+                ForEach(0 ..< 2) { number in
+                    Button(action: {
+                        self.flagTapped(number)
+                    }) {
+                        Image(self.countries[number])
+                            .renderingMode(.original)
+                            .clipShape(Capsule())
+                            .overlay(Capsule().stroke(Color.black, lineWidth: 1))
+                            .shadow(color: .black, radius: 2)
+                    }
+                }
+                Spacer()
             }
         }
+        .alert(isPresented: $showingScore) {
+            Alert(title: Text(scoreTitle), message: Text("Tu puntuación es de ???"), dismissButton: .default(Text("Continuar")) {
+                self.askQuestion()
+                })
+        }
+    }
+    
+    func flagTapped(_ number: Int) {
+        if number == correctAnswer {
+            scoreTitle = "¡Correcto!"
+        } else {
+            scoreTitle = "¡Incorrecto!"
+        }
+        
+        showingScore = true
+    }
+    
+    func askQuestion() {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0...2)
     }
 }
 
