@@ -46,6 +46,10 @@ struct ContentView: View {
                             .shadow(color: .black, radius: 2)
                     }
                 }
+                Text("Puntos: \(score)")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+                    .fontWeight(.black)
                 Spacer()
             }
         }
