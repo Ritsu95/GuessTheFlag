@@ -18,10 +18,12 @@ struct ContentView: View {
     var body: some View {
         // ZStack to put a background color
         ZStack {
+            // Background Gradient
             LinearGradient(gradient: Gradient(colors: [.blue, .black]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 30) {
+                // Top text VStack
                 VStack {
                     Text("¿Qual es la bandera de")
                         .foregroundColor(.white)
@@ -31,6 +33,7 @@ struct ContentView: View {
                         .fontWeight(.black)
                 }
                 
+                // A stack of 3 flags to choose from to anwer
                 ForEach(0 ..< 2) { number in
                     Button(action: {
                         self.flagTapped(number)
@@ -45,6 +48,7 @@ struct ContentView: View {
                 Spacer()
             }
         }
+        // Displays an alert
         .alert(isPresented: $showingScore) {
             Alert(title: Text(scoreTitle), message: Text("Tu puntuación es de ???"), dismissButton: .default(Text("Continuar")) {
                 self.askQuestion()
@@ -52,6 +56,7 @@ struct ContentView: View {
         }
     }
     
+    // Checks if your answer is right or wrong
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "¡Correcto!"
@@ -62,6 +67,7 @@ struct ContentView: View {
         showingScore = true
     }
     
+    // Play again
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
