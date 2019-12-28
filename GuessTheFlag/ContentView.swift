@@ -30,6 +30,7 @@ struct ContentView: View {
     @State private var answerAlertMesage = ""
     @State private var score = 0
     @State private var rotationDegrees = 0.0
+    @State private var opacity = 1.0
     
     var body: some View {
         // ZStack to put a background color
@@ -52,11 +53,17 @@ struct ContentView: View {
                 // A stack of 3 flags to choose from to anwer
                 ForEach(0 ..< 3) { number in
                     Button(action: {
+                        withAnimation {
+                            self.opacity = 0.25
+                        }
                         self.flagTapped(number)
                     }) {
                         FlagImage(img: self.countries[number])
                     }
+                        // If the answer is correct set rotation3DEffect to rotationDegrees, else se it to 0
                     .rotation3DEffect(.degrees(number == self.correctAnswer ? self.rotationDegrees : 0), axis: (x: 0, y: 1, z: 0))
+                        // If the answer is correct, set its opacity to 1, else se it to opacity
+                    .opacity(number == self.correctAnswer ? 1 : self.opacity)
                 }
                 Text("Puntos: \(score)")
                     .foregroundColor(.white)
@@ -76,23 +83,23 @@ struct ContentView: View {
     // Checks if your answer is right or wrong
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
-            answerAlertTitle = "¡Correcto!"
-            answerAlertMesage = "¡Efectivamente! Esa es la bandera de \(self.countries[number])"
-            score += 1
             withAnimation {
                 self.rotationDegrees += 360
             }
+            answerAlertTitle = "¡Correcto!"
+            answerAlertMesage = "¡Efectivamente! Esa es la bandera de \(self.countries[number])"
+            score += 1
         } else {
             answerAlertTitle = "¡Incorrecto!"
             answerAlertMesage = "¡No! Esa es la bandera de \(self.countries[number])"
             score -= 1
         }
-        
         showingScore = true
     }
     
     // Play again
     func askQuestion() {
+        opacity = 1
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
