@@ -29,8 +29,11 @@ struct ContentView: View {
     @State private var answerAlertTitle = ""
     @State private var answerAlertMesage = ""
     @State private var score = 0
-    @State private var rotationDegrees = 0.0
-    @State private var opacity = 1.0
+    @State private var animationRotationDegrees = 0.0
+    @State private var animationOpacity = 1.0
+    @State private var animationScaleRight : CGFloat = 1.0
+    @State private var animationScaleWrong : CGFloat = 1.0
+    
     
     var body: some View {
         // ZStack to put a background color
@@ -54,16 +57,20 @@ struct ContentView: View {
                 ForEach(0 ..< 3) { number in
                     Button(action: {
                         withAnimation {
-                            self.opacity = 0.25
+                            self.animationOpacity = 0.25
+                            self.animationScaleRight += 0.25
+                            self.animationScaleWrong -= 0.25
                         }
                         self.flagTapped(number)
                     }) {
                         FlagImage(img: self.countries[number])
                     }
-                        // If the answer is correct set rotation3DEffect to rotationDegrees, else se it to 0
-                    .rotation3DEffect(.degrees(number == self.correctAnswer ? self.rotationDegrees : 0), axis: (x: 0, y: 1, z: 0))
-                        // If the answer is correct, set its opacity to 1, else se it to opacity
-                    .opacity(number == self.correctAnswer ? 1 : self.opacity)
+                        // If the answer is correct set rotation3DEffect to rotationDegrees, else set it to 0
+                    .rotation3DEffect(.degrees(number == self.correctAnswer ? self.animationRotationDegrees : 0), axis: (x: 0, y: 1, z: 0))
+                        // If the answer is correct set scaleEffect to 1.25, else set it to 0.75
+                    .scaleEffect(number == self.correctAnswer ? self.animationScaleRight : self.animationScaleWrong)
+                        // If the answer is correct, set its opacity to 1, else set it to opacity
+                    .opacity(number == self.correctAnswer ? 1 : self.animationOpacity)
                 }
                 Text("Puntos: \(score)")
                     .foregroundColor(.white)
@@ -84,7 +91,7 @@ struct ContentView: View {
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             withAnimation {
-                self.rotationDegrees += 360
+                self.animationRotationDegrees += 360
             }
             answerAlertTitle = "¡Correcto!"
             answerAlertMesage = "¡Efectivamente! Esa es la bandera de \(self.countries[number])"
@@ -99,7 +106,9 @@ struct ContentView: View {
     
     // Play again
     func askQuestion() {
-        opacity = 1
+        animationOpacity = 1
+        animationScaleRight = 1
+        animationScaleWrong = 1
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
