@@ -29,6 +29,7 @@ struct ContentView: View {
     @State private var answerAlertTitle = ""
     @State private var answerAlertMesage = ""
     @State private var score = 0
+    @State private var rotationDegrees = 0.0
     
     var body: some View {
         // ZStack to put a background color
@@ -55,6 +56,7 @@ struct ContentView: View {
                     }) {
                         FlagImage(img: self.countries[number])
                     }
+                    .rotation3DEffect(.degrees(number == self.correctAnswer ? self.rotationDegrees : 0), axis: (x: 0, y: 1, z: 0))
                 }
                 Text("Puntos: \(score)")
                     .foregroundColor(.white)
@@ -77,6 +79,9 @@ struct ContentView: View {
             answerAlertTitle = "¡Correcto!"
             answerAlertMesage = "¡Efectivamente! Esa es la bandera de \(self.countries[number])"
             score += 1
+            withAnimation {
+                self.rotationDegrees += 360
+            }
         } else {
             answerAlertTitle = "¡Incorrecto!"
             answerAlertMesage = "¡No! Esa es la bandera de \(self.countries[number])"
